@@ -1,0 +1,17 @@
+name: Clash
+version: '${project.version}'
+main: us.aaronpost.clash.Clash
+api-version: 1.18
+authors: [ AaronPost ]
+description: Clash inspired plugin
+
+commands:
+  menu:
+    description: A basic inventory
+    usage: /menu
+  troop:
+    description: Spawns a troop
+    usage: /troop
+  block:
+    description: a test copy command
+    usage: /block
