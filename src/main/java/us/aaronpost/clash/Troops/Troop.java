@@ -1,24 +1,23 @@
 package us.aaronpost.clash.Troops;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.npc.CitizensNPC;
 import net.citizensnpcs.npc.CitizensNPCRegistry;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 public class Troop {
     private int health, level, trainingTime, id;
+    // skin[0] - url    skin[1] - signature     skin[2] - data
+    private String[] skin = {"", "", "", ""};
+    private String title;
     // true when training time has expired
     private boolean trained;
-    private NPCRegistry reg;
-    private NPC npc;
+    public long getId() {
+        return id;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -32,27 +31,20 @@ public class Troop {
         return health;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public String getTitle() {
         return title;
     }
-
-    // skin[0] - url    skin[1] - signature     skin[2] - data
-    private String[] skin = {"", "", "", ""};
-    private String title;
     public Troop(){
         trained = false;
-        reg = CitizensAPI.getNPCRegistry();
     }
     public int getLevel() {
 
         return this.level;
     }
     public void createTroop(Troop t) {
+        NPCRegistry reg = CitizensAPI.getNPCRegistry();
         // Need to add functionality  for non-player entities
+        NPC npc = getNPC();
         npc = reg.createNPC(EntityType.PLAYER, this.title);
         SkinTrait skin = new SkinTrait();
         // Need to add functionality for adding equipment
@@ -61,7 +53,7 @@ public class Troop {
         this.id = npc.getId();
     }
     public void spawnTroop(Location loc) {
-        npc.spawn(loc);
+        getNPC().spawn(loc);
     }
     public void teleport(Location loc) {
         //NPC npc = reg.get
@@ -109,4 +101,8 @@ public class Troop {
         this.level = level;
     }
 
+    public NPC getNPC() {
+        NPCRegistry reg = CitizensAPI.getNPCRegistry();
+        return reg.getById(id);
+    }
 }

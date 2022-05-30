@@ -5,7 +5,9 @@ import net.citizensnpcs.api.event.CitizensEnableEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Campfire;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Fence;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +36,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 public class EventsClass implements Listener {
-    private ArrayList<ClashSession> sessions = new ArrayList<>();
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent i) {
         InventoryView e = i.getView();
@@ -105,88 +107,5 @@ public class EventsClass implements Listener {
     public void CitizensEnable(CitizensEnableEvent e) {
         // Do stuff idk this isn't really necessary
     }
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent p) {
-        // Load their files up!m, .
-        sessions.add(new ClashSession(p.getPlayer()));
-    }
 
-    public void setSessions(ArrayList<ClashSession> sessions) {
-        this.sessions = sessions;
-    }
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent p) {
-        ClashSession c = getSession(p.getPlayer());
-        try {
-            saveSession(p.getPlayer(), c);
-        } catch(IOException e) {
-            Clash.getPlugin().getLogger().info("IOException encountered.");
-        }
-        sessions.remove(c);
-        Clash.getPlugin().getLogger().info("The island of " + p.getPlayer() + "has been saved.");
-    }
-    public void saveSession(Player p, ClashSession c) throws IOException{
-        Gson gson = new Gson();
-        File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/" + p.getPlayer().getUniqueId() +".json");
-        file.getParentFile().mkdir();
-        file.createNewFile();
-        Writer writer = new FileWriter(file, false);
-        gson.toJson(c, writer);
-        writer.flush();
-        writer.close();
-    }
-    public ClashSession getSession(Player p) {
-        for(ClashSession s: sessions) {
-            if(s.getPlayer().equals(p)) {
-                return s;
-            }
-        }
-        return null;
-    }
-    @EventHandler
-    public void onRightClick(PlayerInteractEvent i) {
-        EquipmentSlot slot = i.getHand(); //Get the hand of the event and set it to 'e'.
-        if (slot.equals(EquipmentSlot.HAND)) { // checks for main hand to prevent from running twice
-            if (i.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (i.getClickedBlock().getType().equals(Material.RED_CONCRETE)) {
-                    ClashSession s = getSession(i.getPlayer());
-                    //Implement logic for detecting buildings, not just a block for barracks lol
-                    if (!(s.equals(null))) {
-                        for (int e = 0; e < s.getIsland().getBuildings().size(); e++) {
-                            if (s.getIsland().getBuildings().get(e).getLoc().equals(i.getClickedBlock().getLocation())) {
-                                BarracksMenu menu = new BarracksMenu((Barracks) s.getIsland().getBuildings().get(e));
-                                menu.newInventory(i.getPlayer());
-                                break;
-                            }
-                        }
-                    }
-                } else if (i.getClickedBlock().getType().equals(Material.CAMPFIRE)) {
-                    ClashSession s = getSession(i.getPlayer());
-                    //Implement logic for detecting buildings, not just a block for barracks lol
-                    if (!(s.equals(null))) {
-                        for (int e = 0; e < s.getIsland().getBuildings().size(); e++) {
-                            if (s.getIsland().getBuildings().get(e).getLoc().equals(i.getClickedBlock().getLocation())) {
-                                i.getPlayer().sendMessage("Campfire");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent b) {
-        if (b.getItemInHand().getType().equals(Material.RED_CONCRETE) && b.getItemInHand().getItemMeta().getDisplayName().equals("Barracks")) {
-            b.getPlayer().sendMessage("Placed barracks.");
-            Barracks barracks = new Barracks();
-            barracks.setLocation(b.getBlock().getLocation());
-            getSession(b.getPlayer()).getIsland().addBuilding(barracks);
-        } else if(b.getItemInHand().getType().equals(Material.CAMPFIRE) && b.getItemInHand().getItemMeta().getDisplayName().equals("Army Camp")) {
-            b.getPlayer().sendMessage("Placed army camp.");
-            ArmyCamp camp = new ArmyCamp();
-            camp.setLocation(b.getBlock().getLocation());
-            getSession(b.getPlayer()).getIsland().addBuilding(camp);
-        }
-    }
 }

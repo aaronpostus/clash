@@ -1,18 +1,18 @@
 package us.aaronpost.clash;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import us.aaronpost.clash.Buildings.Building;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.UUID;
-
-public class ClashSession {
-    private Island i;
-    private Player p;
-    private UUID u;
+public class Session implements Serializable {
+    private final Island i;
+    private String pName;
+    private final UUID u;
     private int elixir, gold;
-    public ClashSession(Player p) {
-        this.p = p;
+    public Session(Player p) {
+        this.pName = p.getName();
         u = p.getUniqueId();
         i = new Island();
     }
@@ -37,9 +37,9 @@ public class ClashSession {
     }
 
     public Player getPlayer() {
-        return p;
+        return Bukkit.getPlayer(u);
     }
-    public ClashSession getSession() {
+    public Session getSession() {
         return this;
 
     }

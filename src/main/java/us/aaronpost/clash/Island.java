@@ -2,10 +2,12 @@ package us.aaronpost.clash;
 
 import us.aaronpost.clash.Buildings.Building;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Island {
-    ArrayList<Building> buildings = new ArrayList<>();
+public class Island implements Serializable {
+    List<Building> buildings = new ArrayList<>();
     public Island() {
 
     }
@@ -15,7 +17,5 @@ public class Island {
     public void addBuilding(ArrayList<Building> b) {
         buildings.addAll(b);
     }
-    public ArrayList<Building> getBuildings() {
-        return this.buildings;
-    }
+    public List<Building> getBuildings() { return this.buildings; }
 }

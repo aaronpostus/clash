@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.aaronpost.clash.GUIs.BarracksMenu;
+import us.aaronpost.clash.PersistentData.Serializer;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
 import us.aaronpost.clash.Troops.BarracksQueue;
@@ -33,6 +34,7 @@ public final class Clash extends JavaPlugin {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(new EventsClass(), this);
+        getServer().getPluginManager().registerEvents(new Serializer(), this);
         getLogger().info("Successfully enabled!");
         plugin = this;
     }
@@ -116,11 +118,19 @@ public final class Clash extends JavaPlugin {
                     meta.setDisplayName("Barracks");
                     stack.setItemMeta(meta);
                     player.getInventory().addItem(stack);
+
                     stack = new ItemStack(Material.CAMPFIRE);
                     meta = stack.getItemMeta();
                     meta.setDisplayName("Army Camp");
                     stack.setItemMeta(meta);
                     player.getInventory().addItem(stack);
+
+                    stack = new ItemStack(Material.OAK_FENCE);
+                    meta = stack.getItemMeta();
+                    meta.setDisplayName("Wall");
+                    stack.setItemMeta(meta);
+                    player.getInventory().addItem(stack);
+
                     return true;
                 }
             }

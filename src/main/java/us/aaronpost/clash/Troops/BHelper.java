@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BHelper {
+    public static String RIGHT_ARROW_URL = "http://textures.minecraft.net/texture/1a4f68c8fb279e50ab786f9fa54c88ca4ecfe1eb5fd5f0c38c54c9b1c7203d7a";
+    public static String LEFT_ARROW_URL = "http://textures.minecraft.net/texture/737648ae7a564a5287792b05fac79c6b6bd47f616a559ce8b543e6947235bce";
     public static String INVENTORY_TITLE = ChatColor.RED + "Barracks";
     public static String ENABLED_TITLE = ChatColor.GREEN + "Training..";
     public static String DISABLED_TITLE = ChatColor.RED + "Not training.. (Click)";
