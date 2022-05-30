@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import us.aaronpost.clash.Buildings.Barracks;
+import us.aaronpost.clash.Buildings.Building;
 import us.aaronpost.clash.Clash;
 import us.aaronpost.clash.Troops.BHelper;
 
@@ -19,8 +20,8 @@ import java.util.Arrays;
 public class BarracksMenu implements Listener {
     private Plugin p = Clash.getPlugin(Clash.class);
     private Inventory i;
-    private Barracks b;
-    public BarracksMenu(Barracks b) {
+    private Building b;
+    public BarracksMenu(Building b) {
         this.b = b;
     }
 

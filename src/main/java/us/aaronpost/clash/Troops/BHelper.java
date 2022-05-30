@@ -27,6 +27,10 @@ public class BHelper {
     public static String[] ARCHER_URL = { "http://textures.minecraft.net/texture/e95016226b3d7dfcc165c6c7bb60a5a2c619f52e880868faac4315e31153c248" };
     public static String ARCHER_TITLE = ChatColor.LIGHT_PURPLE + "Archer";
     public static int[] ARCHER_COST = {30, 60, 120, 200, 300, 400, 500, 600, 700, 800};
+
+    public static String[] ARCHER_VALUE = { "ewogICJ0aW1lc3RhbXAiIDogMTY1MjI2NjU5MzU1MCwKICAicHJvZmlsZUlkIiA6ICIwNDNkZWIzOGIyNjE0MTg1YTIzYzU4ZmI2YTc5ZWZkYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJWaXRhbFNpZ256MiIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9lOTUwMTYyMjZiM2Q3ZGZjYzE2NWM2YzdiYjYwYTVhMmM2MTlmNTJlODgwODY4ZmFhYzQzMTVlMzExNTNjMjQ4IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=" };
+    public static String[] ARCHER_SIGNATURE = { "QCaNLM2UgQE6z600LiJ7xrL+mpGZ5CwMw4L6IDZx8vkdX/BbwAN7sQ0qOsBiaa5IyEbPZR2/gObKYljxgPFXHxCrDkLrQbcUoajMuydwnQ4/O+JnIB8klEsLpas4vLulsFx5U0IW8dS8iXFjA8wVElu+jaDg8WiAY4HT/9jRuEDSm9hm86NIMsthpo8dIBIktYThNpL7wAf154wzmspgfycF2TOVe9uUOYa3O669lZX23HcdF7Nj1NgPrJ1nvq1njqsyMYI0nx7gUMrjHqk8+Z0hbyzDhh3OQxlLgQqk0VrOj1o/c15r8pAn4I0d1B3wFAg7bcICmEVe0RV0kxeg1DyZoulB0QOuOyDPNOHyi5p46MDakQWGcvj/ToRK3TGbD1odNrRAU8N+8QS5PP8uiDtmfpIbuV7YYWNFc7bT097SLZzYd5kXRV2EyStqupttqPp55lKBEVUmOxq7+KIJVkWAH3FyC0MxIn6pqgczx299Mc9tYpPjN3k31jtCcoBM/GS83IpMjx5hW0gvy6VLw9RD//u0ejuFMwy+rQbToRdMr8Z4n+YAltFhWiFz29a3nhajC4RwkmimpP4bAPif45cuV3LF+1awSbcDo2Sg9Us+L3RADNxLhoh4Yagte6j2VtqoDuHiSnMjbMvYwcdnacZo0kfnGWbilrClVSeN/lA=" };
+    public static String[] ARCHER_USERNAME = { "skin4a376b0e" };
     public static int ARCHER_POSITION = 12;
     public static int COST_POSITION = 8;
 

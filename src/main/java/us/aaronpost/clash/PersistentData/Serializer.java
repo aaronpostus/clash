@@ -1,26 +1,28 @@
 package us.aaronpost.clash.PersistentData;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import us.aaronpost.clash.Buildings.Building;
 import us.aaronpost.clash.Clash;
 import us.aaronpost.clash.Session;
+import us.aaronpost.clash.Troops.Troop;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class Serializer implements Listener {
 
-
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent p) {
         Session c = Sessions.s.getSession(p.getPlayer());
         try {
             serializeSession(p.getPlayer(), c);
-            Clash.getPlugin().getLogger().info(p.getPlayer().getName() + "'s island has been saved!");
+            Clash.getPlugin().getLogger().info(p.getPlayer().getName() + "'s session has been saved!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,7 +37,7 @@ public class Serializer implements Listener {
         if(file.exists()) {
             try {
                 Sessions.s.getSessions().add(deserializeSession(player));
-                Clash.getPlugin().getLogger().info(player.getName() + "'s session has been loaded.");
+                Clash.getPlugin().getLogger().info(player.getName() + "'s session has been loaded!");
             } catch (IOException e) {
                 // This shouldn't happen because we already have a check for it.
                 e.printStackTrace();
@@ -50,7 +52,11 @@ public class Serializer implements Listener {
     }
     public void serializeSession(Player p, Session c) throws IOException {
         Session s = Sessions.s.getSession(p.getPlayer());
-        Gson g = new Gson();
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Building.class, new BuildingSerializer());
+        builder.registerTypeAdapter(Troop.class, new TroopSerializer());
+        builder.setPrettyPrinting();
+        Gson g = builder.create();
         File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Sessions/" + p.getUniqueId() + ".json");
         file.getParentFile().mkdir();
         file.createNewFile();
@@ -63,9 +69,15 @@ public class Serializer implements Listener {
     public Session deserializeSession(Player p) throws IOException {
         File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Sessions/" + p.getUniqueId() + ".json");
         if (file.exists()){
-            Gson gson = new Gson();
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(Building.class, new BuildingDeserializer());
+            builder.registerTypeAdapter(Troop.class, new TroopDeserializer());
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
             Reader reader = new FileReader(file);
-            return gson.fromJson(reader, Session.class);
+            Session s = gson.fromJson(reader, Session.class);
+            reader.close();
+            return s;
         }
         return null;
     }

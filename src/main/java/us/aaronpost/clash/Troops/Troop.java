@@ -9,7 +9,20 @@ import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 public class Troop {
-    private int health, level, trainingTime, id;
+    private int health;
+    private int level;
+    private int trainingTime;
+    private int id;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    private int type;
     // skin[0] - url    skin[1] - signature     skin[2] - data
     private String[] skin = {"", "", "", ""};
     private String title;

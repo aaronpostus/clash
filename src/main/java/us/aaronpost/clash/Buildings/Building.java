@@ -8,12 +8,9 @@ import us.aaronpost.clash.Clash;
 import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * Serializable!
- */
 
 public class Building implements Serializable {
-    private int cost, buildtime;
+    private int cost, buildtime, type;
     private int x, y, z;
     private String world;
     // false when not built
@@ -30,5 +27,13 @@ public class Building implements Serializable {
     public Location getLoc() {
         World w = Bukkit.getWorld(world);
         return new Location(w, x, y, z);
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
     }
 }

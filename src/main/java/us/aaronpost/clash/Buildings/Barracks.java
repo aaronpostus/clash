@@ -1,5 +1,6 @@
 package us.aaronpost.clash.Buildings;
 
+import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -10,6 +11,9 @@ public class Barracks extends Building {
      * @param d2
      * @return difference between two dates in seconds.
      */
+    public Barracks() {
+        super.setType(1);
+    }
     public long getDifferenceBetweenDates(Date d1, Date d2) {
         return ChronoUnit.SECONDS.between(d1.toInstant(), d2.toInstant());
     }

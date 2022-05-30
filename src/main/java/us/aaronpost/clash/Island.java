@@ -7,15 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Island implements Serializable {
-    List<Building> buildings = new ArrayList<>();
-    public Island() {
 
+    private List<Building> buildings = new ArrayList<>();
+
+    public Island() {
     }
+
+    public List<Building> getBuildings() {
+        return this.buildings;
+    }
+
     public void addBuilding(Building b) {
         buildings.add(b);
     }
-    public void addBuilding(ArrayList<Building> b) {
-        buildings.addAll(b);
+    public void addBuilding(List<Building> t) {
+        buildings.addAll(t);
     }
-    public List<Building> getBuildings() { return this.buildings; }
 }

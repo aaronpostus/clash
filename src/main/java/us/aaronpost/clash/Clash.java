@@ -11,22 +11,27 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import us.aaronpost.clash.Buildings.Interaction;
 import us.aaronpost.clash.GUIs.BarracksMenu;
 import us.aaronpost.clash.PersistentData.Serializer;
+import us.aaronpost.clash.PersistentData.Sessions;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
 import us.aaronpost.clash.Troops.BarracksQueue;
 import us.aaronpost.clash.Troops.Troop;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
 public final class Clash extends JavaPlugin {
     private static Clash plugin;
+    private static Serializer s;
 
     public static Clash getPlugin() {
         return plugin;
@@ -34,13 +39,26 @@ public final class Clash extends JavaPlugin {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(new EventsClass(), this);
-        getServer().getPluginManager().registerEvents(new Serializer(), this);
+        s = new Serializer();
+        getServer().getPluginManager().registerEvents(s, this);
+        getServer().getPluginManager().registerEvents(new Interaction(), this);
         getLogger().info("Successfully enabled!");
         plugin = this;
     }
 
     @Override
     public void onDisable() {
+        Player[] list = new Player[Bukkit.getOnlinePlayers().size()];
+        Bukkit.getOnlinePlayers().toArray(list);
+        for(Player p: list) {
+            try {
+                s.serializeSession(p, Sessions.s.getSession(p));
+                Clash.getPlugin().getLogger().info(p.getName() + "'s session has been saved!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         getLogger().info("Successfully disabled.");
     }
 

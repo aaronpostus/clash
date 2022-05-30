@@ -26,8 +26,9 @@ public class Interaction implements Listener {
                     //Implement logic for detecting buildings, not just a block for barracks lol
                     if (!(s.equals(null))) {
                         for (int e = 0; e < s.getIsland().getBuildings().size(); e++) {
+                            //Building b = s.getIsland().getBuildings().get(e) Building;
                             if (s.getIsland().getBuildings().get(e).getLoc().equals(i.getClickedBlock().getLocation())) {
-                                BarracksMenu menu = new BarracksMenu((Barracks) s.getIsland().getBuildings().get(e));
+                                BarracksMenu menu = new BarracksMenu(s.getIsland().getBuildings().get(e));
                                 menu.newInventory(i.getPlayer());
                                 break;
                             }
@@ -39,7 +40,8 @@ public class Interaction implements Listener {
                     if (!(s.equals(null))) {
                         for (int e = 0; e < s.getIsland().getBuildings().size(); e++) {
                             if (s.getIsland().getBuildings().get(e).getLoc().equals(i.getClickedBlock().getLocation())) {
-                                i.getPlayer().sendMessage("Campfire");
+                                ArmyCamp a = (ArmyCamp) s.getIsland().getBuildings().get(e);
+                                i.getPlayer().sendMessage("Campfire " + a.getInt());
                                 break;
                             }
                         }
