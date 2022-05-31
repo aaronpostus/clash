@@ -20,13 +20,15 @@ public class Serializer implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent p) {
         Session c = Sessions.s.getSession(p.getPlayer());
-        try {
-            serializeSession(p.getPlayer(), c);
-            Clash.getPlugin().getLogger().info(p.getPlayer().getName() + "'s session has been saved!");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(c!=null) {
+            try {
+                serializeSession(p.getPlayer(), c);
+                Clash.getPlugin().getLogger().info(p.getPlayer().getName() + "'s session has been saved!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Sessions.s.getSessions().remove(c);
         }
-        Sessions.s.getSessions().remove(c);
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent p) {

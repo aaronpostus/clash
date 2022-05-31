@@ -40,7 +40,7 @@ public class EventsClass implements Listener {
     @EventHandler
     public void InventoryClick(InventoryClickEvent i) {
         InventoryView e = i.getView();
-        if(e.getTitle().equals(BHelper.INVENTORY_TITLE)) {
+        if(e.getTitle().contains("Barracks")) {
             if(i.getClickedInventory().equals(e.getTopInventory())) {
                 Player p = (Player) i.getWhoClicked();
                 String name = i.getCurrentItem().getItemMeta().getDisplayName();

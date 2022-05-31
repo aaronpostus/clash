@@ -33,17 +33,35 @@ public final class Clash extends JavaPlugin {
     private static Clash plugin;
     private static Serializer s;
 
+
     public static Clash getPlugin() {
         return plugin;
     }
     @Override
     public void onEnable() {
+        plugin = this;
         getServer().getPluginManager().registerEvents(new EventsClass(), this);
         s = new Serializer();
         getServer().getPluginManager().registerEvents(s, this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
+
+        Player[] list = new Player[getServer().getOnlinePlayers().size()];
+        getServer().getOnlinePlayers().toArray(list);
+
+        for(Player p: list) {
+            try {
+                Session session = s.deserializeSession(p);
+                if(session != null) {
+                    Clash.getPlugin().getLogger().info(p.getName() + "'s session has been loaded!");
+                    Sessions.s.getSessions().add(session);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         getLogger().info("Successfully enabled!");
-        plugin = this;
     }
 
     @Override
@@ -52,7 +70,10 @@ public final class Clash extends JavaPlugin {
         Bukkit.getOnlinePlayers().toArray(list);
         for(Player p: list) {
             try {
-                s.serializeSession(p, Sessions.s.getSession(p));
+                Session session = Sessions.s.getSession(p);
+                if(session != null) {
+                    s.serializeSession(p, session);
+                }
                 Clash.getPlugin().getLogger().info(p.getName() + "'s session has been saved!");
 
             } catch (IOException e) {

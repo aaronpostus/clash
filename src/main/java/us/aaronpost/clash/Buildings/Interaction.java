@@ -54,12 +54,12 @@ public class Interaction implements Listener {
     public void onBlockPlace(BlockPlaceEvent b) {
         if (b.getItemInHand().getType().equals(Material.RED_CONCRETE) && b.getItemInHand().getItemMeta().getDisplayName().equals("Barracks")) {
             b.getPlayer().sendMessage("Placed barracks.");
-            Barracks barracks = new Barracks();
+            Barracks barracks = new Barracks(1);
             barracks.setLocation(b.getBlock().getLocation());
             Sessions.s.getSession(b.getPlayer()).getIsland().addBuilding(barracks);
         } else if(b.getItemInHand().getType().equals(Material.CAMPFIRE) && b.getItemInHand().getItemMeta().getDisplayName().equals("Army Camp")) {
             b.getPlayer().sendMessage("Placed army camp.");
-            ArmyCamp camp = new ArmyCamp();
+            ArmyCamp camp = new ArmyCamp(1);
             camp.setLocation(b.getBlock().getLocation());
             Sessions.s.getSession(b.getPlayer()).getIsland().addBuilding(camp);
         } if(b.getItemInHand().getType().equals(Material.OAK_FENCE) && b.getItemInHand().getItemMeta().getDisplayName().equals("Wall")) {

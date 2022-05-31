@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 
 public class Building implements Serializable {
-    private int cost, buildtime, type;
+    private int level, cost, buildtime, type;
     private int x, y, z;
     private String world;
     // false when not built
@@ -31,6 +31,13 @@ public class Building implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getLevel() {
+        return this.level;
+    }
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public int getType() {
