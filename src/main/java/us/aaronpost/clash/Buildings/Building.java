@@ -7,10 +7,15 @@ import us.aaronpost.clash.Clash;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Building implements Serializable {
     private int level, cost, buildtime, type;
+    // Transient prefix means this will not be serialized
+    private transient ArrayList<TimerTask> tasks;
     private int x, y, z;
     private String world;
     // false when not built
@@ -31,6 +36,16 @@ public class Building implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public ArrayList<TimerTask> getTasks() {
+        return tasks;
+    }
+    public void addTask(TimerTask t) {
+        tasks.add(t);
+    }
+    public void removeTask(Timer t) {
+        tasks.remove(t);
     }
 
     public int getLevel() {

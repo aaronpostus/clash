@@ -14,6 +14,7 @@ import us.aaronpost.clash.Troops.Troop;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Serializer implements Listener {
 
@@ -21,6 +22,7 @@ public class Serializer implements Listener {
     public void onPlayerLeave(PlayerQuitEvent p) {
         Session c = Sessions.s.getSession(p.getPlayer());
         if(c!=null) {
+            c.setD(System.currentTimeMillis());
             try {
                 serializeSession(p.getPlayer(), c);
                 Clash.getPlugin().getLogger().info(p.getPlayer().getName() + "'s session has been saved!");

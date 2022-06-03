@@ -11,15 +11,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import us.aaronpost.clash.Buildings.Interaction;
-import us.aaronpost.clash.GUIs.BarracksMenu;
 import us.aaronpost.clash.PersistentData.Serializer;
 import us.aaronpost.clash.PersistentData.Sessions;
+import us.aaronpost.clash.Schematics.Controller;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
 import us.aaronpost.clash.Troops.BarracksQueue;
@@ -27,6 +27,7 @@ import us.aaronpost.clash.Troops.Troop;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public final class Clash extends JavaPlugin {
@@ -44,6 +45,7 @@ public final class Clash extends JavaPlugin {
         s = new Serializer();
         getServer().getPluginManager().registerEvents(s, this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
+        getServer().getPluginManager().registerEvents(new Controller(), this);
 
         Player[] list = new Player[getServer().getOnlinePlayers().size()];
         getServer().getOnlinePlayers().toArray(list);
@@ -52,6 +54,7 @@ public final class Clash extends JavaPlugin {
             try {
                 Session session = s.deserializeSession(p);
                 if(session != null) {
+                    session.setD(System.currentTimeMillis());
                     Clash.getPlugin().getLogger().info(p.getName() + "'s session has been loaded!");
                     Sessions.s.getSessions().add(session);
                 }
@@ -84,7 +87,7 @@ public final class Clash extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, @NotNull String label, String[] args) {
         Player player = (Player) sender;
         if (label.equals("troop")) {
             if(args.length < 1) {
@@ -167,6 +170,21 @@ public final class Clash extends JavaPlugin {
                     stack = new ItemStack(Material.OAK_FENCE);
                     meta = stack.getItemMeta();
                     meta.setDisplayName("Wall");
+                    stack.setItemMeta(meta);
+                    player.getInventory().addItem(stack);
+
+                    stack = new ItemStack(Material.BLAZE_ROD);
+                    meta = stack.getItemMeta();
+                    meta.setDisplayName(ChatColor.BLUE + "Schematic Wand");
+                    ArrayList<String> lore = new ArrayList<>(Arrays.asList(
+                            ChatColor.YELLOW + "x: ",
+                            ChatColor.YELLOW + "y: ",
+                            ChatColor.YELLOW + "z: ",
+                            ChatColor.YELLOW + "x: ",
+                            ChatColor.YELLOW + "y: ",
+                            ChatColor.YELLOW + "z: ")
+                    );
+                    meta.setLore(lore);
                     stack.setItemMeta(meta);
                     player.getInventory().addItem(stack);
 
