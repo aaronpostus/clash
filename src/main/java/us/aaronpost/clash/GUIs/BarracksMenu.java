@@ -89,6 +89,11 @@ public class BarracksMenu implements Listener {
         meta.setDisplayName(ChatColor.BLACK + " ");
         pane.setItemMeta(meta);
 
+        ItemStack soon = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        meta = soon.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "Coming Soon!");
+        soon.setItemMeta(meta);
+
         ItemStack gem = new ItemStack(Material.EMERALD);
         meta = gem.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + "Gem");
@@ -110,6 +115,13 @@ public class BarracksMenu implements Listener {
         for(int e = 44; e < 54; e ++) {
             i.setItem(e, pane);
         }
+        for(int e = 30; e < 35; e++) {
+            i.setItem(e, soon);
+        }
+        for(int e = 37; e < 44; e++) {
+            i.setItem(e, soon);
+        }
+
         //i.setItem(BHelper.COST_POSITION, elixir);
         i.setItem(29, archer);
         i.setItem(28, barbarian);

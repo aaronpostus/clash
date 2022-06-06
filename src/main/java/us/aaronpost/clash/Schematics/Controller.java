@@ -1,8 +1,11 @@
 package us.aaronpost.clash.Schematics;
 
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,10 +17,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import us.aaronpost.clash.Clash;
 
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -66,41 +71,6 @@ public class Controller implements Listener {
     }
 
     @EventHandler
-    public void InventoryClick(InventoryClickEvent e) {
-        ItemStack itemStack = e.getCurrentItem();
-        Inventory i = e.getClickedInventory();
-        if (i.getType().equals(InventoryType.ANVIL)) {
-            if (e.getSlot() == 2) {
-                e.getWhoClicked().sendMessage("clicked");
-                if (e.getView().getTitle().equals("Write schematic name")) {
-                    e.getWhoClicked().sendMessage("2");
-                    Player p = (Player) e.getWhoClicked();
-                    ItemStack item = p.getInventory().getItemInMainHand();
-                    if (item.hasItemMeta()) {
-                        e.getWhoClicked().sendMessage("3");
-                        ItemMeta meta = item.getItemMeta();
-                        if (meta.hasDisplayName()) {
-                            e.getWhoClicked().sendMessage("4");
-                            if (meta.getDisplayName().equals(ChatColor.BLUE + "Schematic Wand")) {
-                                e.getWhoClicked().sendMessage("5");
-                                ArrayList<String> lore = new ArrayList<>(Objects.requireNonNull(meta.getLore()));
-                                // this line below is what breaks it idk why it doesnt work
-                                p.sendMessage(ChatColor.GOLD + "Created Schematic \"" + e.getView().getTopInventory().getItem(2).getItemMeta().getDisplayName() + "\".");
-                                p.sendMessage(ChatColor.GRAY + "1: " + getCoordFromString(lore.get(0))
-                                        + ", " + getCoordFromString(lore.get(1)) + ", " + getCoordFromString(lore.get(2))
-                                );
-                                p.sendMessage(ChatColor.GRAY + "2: " + getCoordFromString(lore.get(3))
-                                        + ", " + getCoordFromString(lore.get(4)) + ", " + getCoordFromString(lore.get(5))
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler
     public void onDrop(PlayerDropItemEvent i) {
         ItemStack item = i.getItemDrop().getItemStack();
         if(item.hasItemMeta()) {
@@ -109,23 +79,39 @@ public class Controller implements Listener {
                 if(meta.getDisplayName().equals(ChatColor.BLUE + "Schematic Wand")) {
                     ArrayList<String> lore = new ArrayList<>(Objects.requireNonNull(meta.getLore()));
                     if(checkForCompleteLore(lore)) {
-//                        i.getPlayer().sendMessage(ChatColor.GOLD + "Both blocks are selected.");
-//                        i.getPlayer().sendMessage(ChatColor.GRAY + "1: " + getCoordFromString(lore.get(0))
-//                                + ", " + getCoordFromString(lore.get(1)) + ", " + getCoordFromString(lore.get(2))
-//                        );
-//                        i.getPlayer().sendMessage(ChatColor.GRAY + "2: " + getCoordFromString(lore.get(3))
-//                                + ", " + getCoordFromString(lore.get(4)) + ", " + getCoordFromString(lore.get(5))
-//                        );
+                        new AnvilGUI.Builder()
+                                .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
+                                    int x = getCoordFromString(lore.get(0));
+                                    int y = getCoordFromString(lore.get(1));
+                                    int z = getCoordFromString(lore.get(2));
 
-                        Inventory inven = i.getPlayer().getServer().createInventory(i.getPlayer(), InventoryType.ANVIL, "Write schematic name");
-                        ItemStack rod = new ItemStack(Material.NAME_TAG);
-                        meta = rod.getItemMeta();
-                        meta.setDisplayName("?");
-                        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click to create!"));
-                        rod.setItemMeta(meta);
+                                    Location l = new Location(i.getPlayer().getWorld(), x,y,z);
+                                    Block b1 = l.getBlock();
 
-                        inven.setItem(0, rod);
-                        i.getPlayer().openInventory(inven);
+                                    player.sendMessage(ChatColor.GOLD + "Created Schematic \"" + text + "\".");
+                                    player.sendMessage(ChatColor.GRAY + "1: " + x + ", " + y + ", " + z);
+
+                                    x = getCoordFromString(lore.get(3));
+                                    y = getCoordFromString(lore.get(4));
+                                    z = getCoordFromString(lore.get(5));
+
+                                    l = new Location(i.getPlayer().getWorld(), x,y,z);
+                                    Block b2 = l.getBlock();
+
+                                    player.sendMessage(ChatColor.GRAY + "2: " + x + ", " + y + ", " + z);
+
+                                    Schematics.s.addSchematic(new Schematic(b1, b2));
+
+                                    return AnvilGUI.Response.close();
+                                })
+                                .text("?")                              //sets the text the GUI should start with
+                                .itemLeft(new ItemStack(Material.NAME_TAG))                      //use a custom item for the first slot
+//                                .itemRight(new ItemStack(Material.IRON_SWORD))                     //use a custom item for the second slot
+//                                .onLeftInputClick(player -> player.sendMessage("first sword"))     //called when the left input slot is clicked
+//                                .onRightInputClick(player -> player.sendMessage("second sword"))   //called when the right input slot is clicked
+                                .title("Write schematic name:")                                       //set the title of the GUI (only works in 1.14+)
+                                .plugin(Clash.getPlugin())                                          //set the plugin instance
+                                .open(i.getPlayer());                                                   //opens the GUI for the player provided
                     } else {
                         i.getPlayer().sendMessage(ChatColor.GOLD + "Lore is incomplete.");
                     }

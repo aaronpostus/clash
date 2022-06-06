@@ -9,12 +9,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import us.aaronpost.clash.Buildings.Building;
 import us.aaronpost.clash.Clash;
+import us.aaronpost.clash.Schematics.Schematic;
 import us.aaronpost.clash.Session;
 import us.aaronpost.clash.Troops.Troop;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Serializer implements Listener {
 
@@ -80,6 +82,35 @@ public class Serializer implements Listener {
             Gson gson = builder.create();
             Reader reader = new FileReader(file);
             Session s = gson.fromJson(reader, Session.class);
+            reader.close();
+            return s;
+        }
+        return null;
+    }
+
+    public void serializeSchematics(ArrayList<Schematic> schematics) throws IOException{
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson g = builder.create();
+        File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/schematics.json");
+        file.getParentFile().mkdir();
+        file.createNewFile();
+        Writer w = new FileWriter(file, false);
+        g.toJson(schematics, w);
+        w.flush();
+        w.close();
+        System.out.println();
+    }
+
+    public ArrayList<Schematic> deserializeSchematics() throws IOException {
+        File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/schematics.json");
+        if (file.exists()) {
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+            Reader reader = new FileReader(file);
+            List<Schematic> schematics = gson.fromJson(reader, List.class);
+            ArrayList<Schematic> s = (ArrayList<Schematic>) schematics;
             reader.close();
             return s;
         }

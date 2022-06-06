@@ -20,6 +20,7 @@ import us.aaronpost.clash.Buildings.Interaction;
 import us.aaronpost.clash.PersistentData.Serializer;
 import us.aaronpost.clash.PersistentData.Sessions;
 import us.aaronpost.clash.Schematics.Controller;
+import us.aaronpost.clash.Schematics.Schematics;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
 import us.aaronpost.clash.Troops.BarracksQueue;
@@ -189,17 +190,12 @@ public final class Clash extends JavaPlugin {
                     player.getInventory().addItem(stack);
 
                     return true;
-                }
-            }
-        } else if(label.equals("block")) {
-            if(args.length > 0) {
-                if(args[0].equals("copy")) {
-                    Player p = (Player) sender;
-                    Location loc = p.getTargetBlockExact(500).getLocation();
-                    p.getLocation().getBlock().setType(loc.getBlock().getBlockData().getMaterial());
-                    p.getLocation().getBlock().setBlockData(loc.getBlock().getBlockData());
-                    //if(loc.getBlock().getType().equals())
-                    //p.getLocation().getBlock().getState().update(true);
+                } else if(args[0].equals("paste")) {
+                    if(Schematics.s.getSchematics().size() != 0) {
+                        Schematics.s.getSchematics().get(Integer.parseInt(args[1])).pasteSchematic(player.getLocation());
+                    } else {
+                        player.sendMessage("There are no schematics made.");
+                    }
                     return true;
                 }
             }
