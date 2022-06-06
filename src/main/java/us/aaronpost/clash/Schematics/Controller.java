@@ -17,12 +17,14 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import us.aaronpost.clash.Clash;
+import us.aaronpost.clash.GUIs.AdminSchematicMenu;
 
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -100,7 +102,7 @@ public class Controller implements Listener {
 
                                     player.sendMessage(ChatColor.GRAY + "2: " + x + ", " + y + ", " + z);
 
-                                    Schematics.s.addSchematic(new Schematic(b1, b2));
+                                    Schematics.s.addSchematic(new Schematic(b1, b2, text));
 
                                     return AnvilGUI.Response.close();
                                 })
@@ -121,6 +123,20 @@ public class Controller implements Listener {
         }
 
     }
+    @EventHandler
+    public void onCrouch(PlayerToggleSneakEvent e) {
+        if(e.isSneaking() && e.getPlayer().getInventory().getItemInMainHand().hasItemMeta()) {
+            if(e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.BLAZE_ROD)) {
+                if(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Schematic Wand")) {
+                    if(Schematics.s.getSchematics().size() > 0) {
+                        //Not a perfect way of doing this, but it will work.
+                        Clash.getPlugin().getServer().getPluginManager().registerEvents(new AdminSchematicMenu(e.getPlayer()), Clash.getPlugin());
+                    }
+                }
+            }
+        }
+    }
+
     public boolean checkForCompleteLore(ArrayList<String> lore) {
         for(int i = 0; i < 6; i++) {
             if(ChatColor.stripColor(lore.get(i)).length() < 4) {

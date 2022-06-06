@@ -1,5 +1,6 @@
 package us.aaronpost.clash;
 
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -20,6 +21,8 @@ import us.aaronpost.clash.Buildings.Interaction;
 import us.aaronpost.clash.PersistentData.Serializer;
 import us.aaronpost.clash.PersistentData.Sessions;
 import us.aaronpost.clash.Schematics.Controller;
+import us.aaronpost.clash.Schematics.LocationWrapper;
+import us.aaronpost.clash.Schematics.Schematic;
 import us.aaronpost.clash.Schematics.Schematics;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
@@ -50,6 +53,14 @@ public final class Clash extends JavaPlugin {
 
         Player[] list = new Player[getServer().getOnlinePlayers().size()];
         getServer().getOnlinePlayers().toArray(list);
+        ArrayList<Schematic> schematics = new ArrayList<>();
+        try {
+             schematics = (ArrayList<Schematic>) s.deserializeSchematics();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Schematics.s.addSchematic(schematics);
 
         for(Player p: list) {
             try {
@@ -72,6 +83,13 @@ public final class Clash extends JavaPlugin {
     public void onDisable() {
         Player[] list = new Player[Bukkit.getOnlinePlayers().size()];
         Bukkit.getOnlinePlayers().toArray(list);
+
+        try {
+            s.serializeSchematics();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
         for(Player p: list) {
             try {
                 Session session = Sessions.s.getSession(p);
@@ -192,9 +210,15 @@ public final class Clash extends JavaPlugin {
                     return true;
                 } else if(args[0].equals("paste")) {
                     if(Schematics.s.getSchematics().size() != 0) {
-                        Schematics.s.getSchematics().get(Integer.parseInt(args[1])).pasteSchematic(player.getLocation());
+                        Schematics.s.getSchematics().get(Integer.parseInt(args[1])).pasteSchematic(player.getLocation(), 0);
                     } else {
                         player.sendMessage("There are no schematics made.");
+                    }
+                    return true;
+                } else if(args[0].equals("getLocs")) {
+                    ArrayList<LocationWrapper> blockLocs = (ArrayList<LocationWrapper>) Schematics.s.getSchematics().get(Integer.parseInt(args[1])).getLocs();
+                    for(LocationWrapper loc: blockLocs) {
+                        player.sendMessage(loc.getLoc().toString() + " - loc");
                     }
                     return true;
                 }

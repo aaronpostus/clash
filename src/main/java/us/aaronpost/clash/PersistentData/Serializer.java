@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import us.aaronpost.clash.Buildings.Building;
 import us.aaronpost.clash.Clash;
 import us.aaronpost.clash.Schematics.Schematic;
+import us.aaronpost.clash.Schematics.Schematics;
 import us.aaronpost.clash.Session;
 import us.aaronpost.clash.Troops.Troop;
 
@@ -56,11 +57,47 @@ public class Serializer implements Listener {
 
         }
     }
+    public void serializeSchematics() throws IOException {
+        List<Schematic> schematics = Schematics.s.getSchematics();
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson g = builder.create();
+        File file;
+        for(int i = 0; i < schematics.size(); i++) {
+            file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/" + schematics.get(i).getName() + ".json");
+            file.getParentFile().mkdir();
+            file.createNewFile();
+            Writer w = new FileWriter(file, false);
+            g.toJson(schematics.get(i), w);
+            w.flush();
+            w.close();
+        }
+
+    }
+
+    public List<Schematic> deserializeSchematics() throws IOException {
+        File[] schematicsFilePath = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/").listFiles();
+        List<Schematic> schematics = new ArrayList<>();
+        for(File file: schematicsFilePath) {
+            if (file.exists()) {
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                Reader reader = new FileReader(file);
+                Schematic s = gson.fromJson(reader, Schematic.class);
+                schematics.add(s);
+                reader.close();
+            }
+            else {
+                return null;
+            }
+        }
+        return schematics;
+    }
     public void serializeSession(Player p, Session c) throws IOException {
         Session s = Sessions.s.getSession(p.getPlayer());
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Building.class, new BuildingSerializer());
-        builder.registerTypeAdapter(Troop.class, new TroopSerializer());
+//        builder.registerTypeAdapter(Building.class, new BuildingSerializer());
+//        builder.registerTypeAdapter(Troop.class, new TroopSerializer());
         builder.setPrettyPrinting();
         Gson g = builder.create();
         File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Sessions/" + p.getUniqueId() + ".json");
@@ -70,7 +107,6 @@ public class Serializer implements Listener {
         g.toJson(s, w);
         w.flush();
         w.close();
-        System.out.println();
     }
     public Session deserializeSession(Player p) throws IOException {
         File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Sessions/" + p.getUniqueId() + ".json");
@@ -82,35 +118,6 @@ public class Serializer implements Listener {
             Gson gson = builder.create();
             Reader reader = new FileReader(file);
             Session s = gson.fromJson(reader, Session.class);
-            reader.close();
-            return s;
-        }
-        return null;
-    }
-
-    public void serializeSchematics(ArrayList<Schematic> schematics) throws IOException{
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        Gson g = builder.create();
-        File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/schematics.json");
-        file.getParentFile().mkdir();
-        file.createNewFile();
-        Writer w = new FileWriter(file, false);
-        g.toJson(schematics, w);
-        w.flush();
-        w.close();
-        System.out.println();
-    }
-
-    public ArrayList<Schematic> deserializeSchematics() throws IOException {
-        File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/schematics.json");
-        if (file.exists()) {
-            GsonBuilder builder = new GsonBuilder();
-            builder.setPrettyPrinting();
-            Gson gson = builder.create();
-            Reader reader = new FileReader(file);
-            List<Schematic> schematics = gson.fromJson(reader, List.class);
-            ArrayList<Schematic> s = (ArrayList<Schematic>) schematics;
             reader.close();
             return s;
         }

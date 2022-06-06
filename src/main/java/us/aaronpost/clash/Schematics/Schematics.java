@@ -11,6 +11,10 @@ public class Schematics implements Serializable {
     public void addSchematic(Schematic s) {
         schematics.add(s);
     }
+
+    public void addSchematic(List<Schematic> s) {
+        schematics.addAll(s);
+    }
     public List<Schematic> getSchematics() {
         return schematics;
     }
