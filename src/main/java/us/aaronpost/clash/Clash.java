@@ -20,6 +20,7 @@ import us.aaronpost.clash.Buildings.Interaction;
 import us.aaronpost.clash.PersistentData.Serializer;
 import us.aaronpost.clash.PersistentData.Sessions;
 import us.aaronpost.clash.Schematics.Controller;
+import us.aaronpost.clash.Schematics.LocationWrapper;
 import us.aaronpost.clash.Schematics.Schematics;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
@@ -195,6 +196,12 @@ public final class Clash extends JavaPlugin {
                         Schematics.s.getSchematics().get(Integer.parseInt(args[1])).pasteSchematic(player.getLocation());
                     } else {
                         player.sendMessage("There are no schematics made.");
+                    }
+                    return true;
+                } else if(args[0].equals("getLocs")) {
+                    ArrayList<LocationWrapper> blockLocs = (ArrayList<LocationWrapper>) Schematics.s.getSchematics().get(Integer.parseInt(args[1])).getLocs();
+                    for(LocationWrapper loc: blockLocs) {
+                        player.sendMessage(loc.getLoc().toString() + " - loc");
                     }
                     return true;
                 }

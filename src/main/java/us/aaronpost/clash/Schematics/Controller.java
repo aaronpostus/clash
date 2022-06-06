@@ -100,7 +100,7 @@ public class Controller implements Listener {
 
                                     player.sendMessage(ChatColor.GRAY + "2: " + x + ", " + y + ", " + z);
 
-                                    Schematics.s.addSchematic(new Schematic(b1, b2));
+                                    Schematics.s.addSchematic(new Schematic(b1, b2, text));
 
                                     return AnvilGUI.Response.close();
                                 })
