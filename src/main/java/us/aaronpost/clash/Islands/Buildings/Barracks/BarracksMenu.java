@@ -1,6 +1,5 @@
-package us.aaronpost.clash.GUIs;
+package us.aaronpost.clash.Islands.Buildings.Barracks;
 
-import net.citizensnpcs.npc.ai.speech.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,10 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
-import us.aaronpost.clash.Buildings.Barracks;
-import us.aaronpost.clash.Buildings.Building;
+import us.aaronpost.clash.GUIs.OfflineSkull;
+import us.aaronpost.clash.Islands.Buildings.Barracks.Barracks;
+import us.aaronpost.clash.Islands.Building;
 import us.aaronpost.clash.Clash;
 import us.aaronpost.clash.Troops.BHelper;
 
@@ -94,9 +93,9 @@ public class BarracksMenu implements Listener {
         meta.setDisplayName(ChatColor.RED + "Coming Soon!");
         soon.setItemMeta(meta);
 
-        ItemStack gem = new ItemStack(Material.EMERALD);
+        ItemStack gem = new ItemStack(Material.CHEST);
         meta = gem.getItemMeta();
-        meta.setDisplayName(ChatColor.GREEN + "Gem");
+        meta.setDisplayName(ChatColor.YELLOW + "Pick up this Building");
         gem.setItemMeta(meta);
 
         ItemStack upgrade = new ItemStack(Material.ARROW);

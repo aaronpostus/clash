@@ -1,39 +1,22 @@
 package us.aaronpost.clash;
 
-import com.google.gson.Gson;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.Fence;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import us.aaronpost.clash.Buildings.ArmyCamp;
-import us.aaronpost.clash.Buildings.Barracks;
-import us.aaronpost.clash.GUIs.BarracksMenu;
 import us.aaronpost.clash.GUIs.DynamicItem;
 import us.aaronpost.clash.GUIs.ItemStackHelper;
 import us.aaronpost.clash.Troops.BHelper;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
 
 public class EventsClass implements Listener {
 
@@ -102,6 +85,22 @@ public class EventsClass implements Listener {
             Player p = (Player) e.getPlayer();
             p.sendMessage(ChatColor.LIGHT_PURPLE + "Total Cost: " + BHelper.calculateElixirForInventory(e.getInventory(), p) + "");
         }
+    }
+
+    @EventHandler
+    public void onFallDamage(EntityDamageEvent e) {
+        if(e.getEntityType().equals(EntityType.PLAYER)) {
+            if(e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void HungerDeplete(FoodLevelChangeEvent e) {
+        // 20 is full, 0 is empty
+        e.setCancelled(true);
+        e.getEntity().setFoodLevel(20);
     }
 
     public void CitizensEnable(CitizensEnableEvent e) {

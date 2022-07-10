@@ -1,14 +1,21 @@
 package us.aaronpost.clash.Troops;
 
+import net.citizensnpcs.npc.ai.speech.Chat;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import us.aaronpost.clash.Clash;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BHelper {
+    public static World world = Clash.getPlugin().getServer().getWorld("World");
+    public static String prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + "Clash" + ChatColor.GRAY + "]" + ChatColor.YELLOW;
     public static String RIGHT_ARROW_URL = "http://textures.minecraft.net/texture/1a4f68c8fb279e50ab786f9fa54c88ca4ecfe1eb5fd5f0c38c54c9b1c7203d7a";
     public static String LEFT_ARROW_URL = "http://textures.minecraft.net/texture/737648ae7a564a5287792b05fac79c6b6bd47f616a559ce8b543e6947235bce";
     public static String INVENTORY_TITLE = ChatColor.DARK_RED + "+ Barracks Level ` +";
@@ -33,7 +40,6 @@ public class BHelper {
     public static String[] ARCHER_USERNAME = { "skin4a376b0e" };
     public static int ARCHER_POSITION = 12;
     public static int COST_POSITION = 8;
-
     // Needs to be adjusted to check a player's level of their barracks
     public static int calculateElixirForInventory(Inventory i, Player p) {
         int elixir = 0;

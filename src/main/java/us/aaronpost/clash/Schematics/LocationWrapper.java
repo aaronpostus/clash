@@ -7,26 +7,23 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import us.aaronpost.clash.Clash;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class LocationWrapper {
-    private transient Location loc;
-    private transient World w;
+public class LocationWrapper implements Serializable {
     private double x, y, z;
     private String world;
     public LocationWrapper(Location loc) {
-        this.loc = loc;
-        this.w = loc.getWorld();
         x = loc.getX();
         y = loc.getY();
         z = loc.getZ();
         world = loc.getWorld().getName();
     }
     public Location getLoc() {
-        loc = new Location(w, x, y, z);
+        Location loc = new Location(Clash.getPlugin().getServer().getWorld(world), x, y, z);
         return loc;
     }
     public Block getBlock() {
-        return  getLoc().getBlock();
+        return getLoc().getBlock();
     }
 }

@@ -1,6 +1,5 @@
 package us.aaronpost.clash;
 
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -17,7 +16,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import us.aaronpost.clash.Buildings.Interaction;
+import us.aaronpost.clash.Arenas.ArenaManager;
+import us.aaronpost.clash.Arenas.Arenas;
+import us.aaronpost.clash.Islands.Buildings.BuildingInteraction.Interaction;
 import us.aaronpost.clash.PersistentData.Serializer;
 import us.aaronpost.clash.PersistentData.Sessions;
 import us.aaronpost.clash.Schematics.Controller;
@@ -26,7 +27,7 @@ import us.aaronpost.clash.Schematics.Schematic;
 import us.aaronpost.clash.Schematics.Schematics;
 import us.aaronpost.clash.Troops.BHelper;
 import us.aaronpost.clash.Troops.Barbarian;
-import us.aaronpost.clash.Troops.BarracksQueue;
+import us.aaronpost.clash.Islands.Buildings.Barracks.BarracksQueue;
 import us.aaronpost.clash.Troops.Troop;
 
 import java.io.IOException;
@@ -50,6 +51,9 @@ public final class Clash extends JavaPlugin {
         getServer().getPluginManager().registerEvents(s, this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
         getServer().getPluginManager().registerEvents(new Controller(), this);
+        getServer().getPluginManager().registerEvents(new ArenaManager(), this);
+        getServer().getPluginManager().registerEvents(new Portals(), this);
+
 
         Player[] list = new Player[getServer().getOnlinePlayers().size()];
         getServer().getOnlinePlayers().toArray(list);
@@ -207,6 +211,11 @@ public final class Clash extends JavaPlugin {
                     stack.setItemMeta(meta);
                     player.getInventory().addItem(stack);
 
+                    stack = new ItemStack(Material.SHEARS);
+                    meta = stack.getItemMeta();
+                    meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Save Coordinates Wand");
+                    player.getInventory().addItem(stack);
+
                     return true;
                 } else if(args[0].equals("paste")) {
                     if(Schematics.s.getSchematics().size() != 0) {
@@ -223,6 +232,23 @@ public final class Clash extends JavaPlugin {
                     return true;
                 }
             }
+        } else if (label.equals("island")) {
+            if(!Arenas.a.playerAtArena(player)) {
+                if (Arenas.a.hasAvailableArena()) {
+                    player.sendMessage(BHelper.prefix + ChatColor.GRAY + " Sent you to your island.");
+                    Arenas.a.findAvailableArena().assignPlayer(player);
+                } else {
+                    player.sendMessage(BHelper.prefix + ChatColor.GRAY + " No arenas are available. Please wait for someone to unload their island.");
+                    Arenas.a.sendToSpawn(player);
+                }
+            } else {
+                player.sendMessage(BHelper.prefix + ChatColor.GRAY + " Sent you to spawn.");
+                Arenas.a.findPlayerArena(player).unassign();
+                Arenas.a.sendToSpawn(player);
+                player.getInventory().clear();
+                // Take player to spawn
+            }
+            return true;
         }
         return false;
     }

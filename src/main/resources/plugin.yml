@@ -9,6 +9,9 @@ commands:
   menu:
     description: A basic inventory
     usage: /menu
+  island:
+    description: Island menu
+    usage: /island
   troop:
     description: Spawns a troop
     usage: /troop

@@ -7,8 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import us.aaronpost.clash.Buildings.Building;
+import us.aaronpost.clash.Islands.Building;
 import us.aaronpost.clash.Clash;
+import us.aaronpost.clash.Islands.Buildings.Serialization.BuildingDeserializer;
 import us.aaronpost.clash.Schematics.Schematic;
 import us.aaronpost.clash.Schematics.Schematics;
 import us.aaronpost.clash.Session;
@@ -16,7 +17,6 @@ import us.aaronpost.clash.Troops.Troop;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Serializer implements Listener {
@@ -78,6 +78,7 @@ public class Serializer implements Listener {
     public List<Schematic> deserializeSchematics() throws IOException {
         File[] schematicsFilePath = new File(Clash.getPlugin().getDataFolder().getAbsolutePath() + "/Schematics/").listFiles();
         List<Schematic> schematics = new ArrayList<>();
+        int numberOfLoadedSchematics = 0;
         for(File file: schematicsFilePath) {
             if (file.exists()) {
                 GsonBuilder builder = new GsonBuilder();
@@ -86,11 +87,14 @@ public class Serializer implements Listener {
                 Schematic s = gson.fromJson(reader, Schematic.class);
                 schematics.add(s);
                 reader.close();
+                numberOfLoadedSchematics++;
             }
             else {
+                Clash.getPlugin().getLogger().info("Something is horribly wrong with the file system. Fix this.");
                 return null;
             }
         }
+        Clash.getPlugin().getLogger().info("Loaded " + numberOfLoadedSchematics +" schematics.");
         return schematics;
     }
     public void serializeSession(Player p, Session c) throws IOException {

@@ -1,10 +1,13 @@
-package us.aaronpost.clash.Collection;
+package us.aaronpost.clash.Islands.Buildings.Collection;
+
+import java.util.Currency;
 
 public class Collector extends Thread {
 
     private final double collectionRatePerSecond;
     private final double capacity;
     private double currentTotal;
+    private Currency currency;
 
 
     public Collector(double collectionRatePerHour, double currentTotal, double capacity) {

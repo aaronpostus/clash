@@ -1,12 +1,10 @@
-package us.aaronpost.clash.Buildings;
+package us.aaronpost.clash.Islands.Buildings.ArmyCamp;
 
-import org.bukkit.entity.ArmorStand;
-
-import java.io.Serializable;
-
+import us.aaronpost.clash.Islands.Building;
 public class ArmyCamp extends Building {
     private int armyCamp;
-    public ArmyCamp(int level) {
+    public ArmyCamp(int level, int x, int z) {
+        super(x, z, "fillerschematic");
         this.armyCamp = 3;
         super.setType(2);
         super.setLevel(level);

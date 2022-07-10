@@ -1,6 +1,5 @@
-package us.aaronpost.clash.Troops;
+package us.aaronpost.clash.Islands.Buildings.Barracks;
 
-import us.aaronpost.clash.File.PlayerFileController;
 import us.aaronpost.clash.Troops.Troop;
 
 import java.util.ArrayList;

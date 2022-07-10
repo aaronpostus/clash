@@ -15,6 +15,14 @@ public class Schematics implements Serializable {
     public void addSchematic(List<Schematic> s) {
         schematics.addAll(s);
     }
+    public Schematic getSchematic(String name) {
+        for(Schematic schematic : schematics) {
+            if(schematic.getName().equals(name)) {
+                return schematic;
+            }
+        }
+        return null;
+    }
     public List<Schematic> getSchematics() {
         return schematics;
     }

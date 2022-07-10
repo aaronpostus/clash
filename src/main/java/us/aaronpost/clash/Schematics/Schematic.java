@@ -1,23 +1,24 @@
 package us.aaronpost.clash.Schematics;
 
-import net.citizensnpcs.npc.ai.speech.Chat;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.xml.sax.helpers.LocatorImpl;
 import us.aaronpost.clash.Clash;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 public class Schematic implements Serializable {
     private final String name;
     private final int xLength, yLength, zLength;
     private int yOffset;
-    private List<LocationWrapper> blockLocs = new ArrayList<>();
+    private final List<LocationWrapper> blockLocs = new ArrayList<>();
+    private List<LocationWrapper> eventBlockLocs = new ArrayList<>();
     public Schematic(Block b1, Block b2, String name) {
         this.yOffset = 0;
         this.name = name;
@@ -57,6 +58,23 @@ public class Schematic implements Serializable {
             }
         }
     }
+    public int getXLength() {
+       return xLength;
+    }
+    public int getZLength() {
+        return zLength;
+    }
+    public int getYLength() {
+        return yLength;
+    }
+    public int getYOffset() { return yOffset; }
+    public void setEventBlockLoc() {
+        // Do something
+    }
+
+    public Block getEventBlockLoc(int index) {
+        return this.eventBlockLocs.get(index).getBlock();
+    }
 
     public List<LocationWrapper> getLocs() {
         return this.blockLocs;
@@ -67,15 +85,18 @@ public class Schematic implements Serializable {
     }
 
     public void setyOffset(int yOffset) {
+
         this.yOffset = yOffset;
     }
 
-    public void pasteSchematic(Location loc, int delayInMilliseconds) {
+    public void pasteSchematic(Location origLoc, int delayInMilliseconds) {
+        Location loc = origLoc.clone();
         loc.setY(loc.getY() + yOffset);
         double initZ = loc.getZ();
         double initX = loc.getX();
         int counter = 0;
-        Clash.getPlugin().getServer().getPlayer("Aaronn").sendMessage(ChatColor.GRAY + "Pasting schematic " + "\"" + name + "\".");
+        TextComponent text = new TextComponent();
+        //Clash.getPlugin().getServer().getPlayer("Aaronn").spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Pasting schmeatic " + name));
         for(int y = 0; y < yLength; y++) {
             loc.setX(initX);
             for (int x = 0; x < xLength; x++) {
@@ -94,12 +115,38 @@ public class Schematic implements Serializable {
         }
     }
 
-    public void pasteSchematicConstruction(Location loc, int layersBuilt) {
+    public void resetToGrassLand(Location origLoc) {
+        Location loc = origLoc.clone();
+        loc.setY(loc.getY() + yOffset);
+        double initZ = loc.getZ();
+        double initX = loc.getX();
+        for(int y = 0; y < yLength; y++) {
+            loc.setX(initX);
+            for (int x = 0; x < xLength; x++) {
+                loc.setZ(initZ);
+                for(int z = 0; z < zLength; z++) {
+                    Block newBlock = loc.getBlock();
+                    //change made was yOffset-1
+                    if(y==Math.abs(yOffset)-1) {
+                        newBlock.setType(Material.GRASS_BLOCK);
+                    } else {
+                        newBlock.setType(Material.AIR);
+                    }
+                    loc.setZ(loc.getZ() + 1);
+                }
+                loc.setX(loc.getX() + 1);
+            }
+            loc.setY(loc.getY() + 1);
+        }
+    }
+
+    public void pasteSchematicConstruction(Location origLoc, int layersBuilt) {
+        Location loc = origLoc.clone();
         loc.setY(loc.getY() + yOffset);
         double initZ = loc.getZ();
         double initX = loc.getX();
         int counter = 0;
-        Clash.getPlugin().getServer().getPlayer("Aaronn").sendMessage(ChatColor.GRAY + "Pasting schematic " + "\"" + name + "\".");
+        Clash.getPlugin().getServer().getPlayer("Aaronn").spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Pasting schmeatic " + name));
         for(int y = 0; y < yLength; y++) {
             loc.setX(initX);
             for (int x = 0; x < xLength; x++) {
